@@ -8,6 +8,6 @@ namespace LemlemPharmacy.DAL
 		public Task<BinCardDTO> GetBinCard(Guid id);
 		public Task<IEnumerable<BinCardDTO>> GetAllBinCards();
 		public Task<IEnumerable<BinCardDTO>> GetBinCardByBatchNo(string batchNo);
-		public Task<IEnumerable<BinCardDTO>> GetBinCardByDate([FromBody] BinCardDateRangeDTO binCardDate);
+		public Task<IEnumerable<BinCardDTO>> GetBinCardByDate(BinCardDateRangeDTO binCardDate);
 	}
 }

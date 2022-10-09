@@ -19,6 +19,7 @@ builder.Services.AddDbContext<LemlemPharmacyContext>(options =>
 builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ISoldMedicineRepository, SoldMedicineRepository>();
+builder.Services.AddScoped<IBinCardRepository, BinCardRepository>();
 
 builder.Services.AddCors(options =>
 {

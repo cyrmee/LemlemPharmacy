@@ -64,5 +64,18 @@ namespace LemlemPharmacy.Controllers
                 return BadRequest(e.Message);
             }
 		}
-    }
+
+		[HttpGet("byDate/")]
+		public async Task<ActionResult<IEnumerable<BinCardDTO>>> GetBinCardByDate([FromQuery] BinCardDateRangeDTO binCardDateRangeDTO)
+		{
+			try
+			{
+				return Ok(await _binCardRepository.GetBinCardByDate(binCardDateRangeDTO));
+			}
+			catch (Exception e)
+			{
+				return BadRequest(e.Message);
+			}
+		}
+	}
 }

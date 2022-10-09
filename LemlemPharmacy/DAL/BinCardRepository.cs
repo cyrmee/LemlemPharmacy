@@ -45,7 +45,7 @@ namespace LemlemPharmacy.DAL
 			return binCards;
 		}
 
-		public async Task<IEnumerable<BinCardDTO>> GetBinCardByDate([FromBody] BinCardDateRangeDTO binCardDateRangeDTO)
+		public async Task<IEnumerable<BinCardDTO>> GetBinCardByDate(BinCardDateRangeDTO binCardDateRangeDTO)
 		{
 			var result = await _context.BinCard.FromSqlRaw($"EXEC SpGenerateBinCardForMedicineUsingRange @BatchNo = '{binCardDateRangeDTO.BatchNo}',@StartDate = '{binCardDateRangeDTO.StartDate}',@EndDate  = '{binCardDateRangeDTO.EndDate}'").ToListAsync();
 			if (result == null) throw new Exception("Bin Card for medicine not found!");
