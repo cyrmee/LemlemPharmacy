@@ -6,7 +6,7 @@ namespace LemlemPharmacy.DAL
 {
 	public interface ISoldMedicineRepository : IDisposable
 	{
-		public Task<IEnumerable<SoldMedicineDTO>> SellMedicine([FromBody] SellMedicineDTO soldMedicine);
+		public Task<IEnumerable<SoldMedicineDTO>> SellMedicine(SellMedicineDTO soldMedicine);
 		public Task<IEnumerable<SoldMedicineDTO>> GetAllSoldMedicines();
 		public Task<SoldMedicineDTO> GetSoldMedicine(Guid id);
 	}

@@ -62,7 +62,7 @@ namespace LemlemPharmacy.DAL
 			return medicine;
 		}
 
-		public async Task<IEnumerable<MedicineDTO>> UpdateMedicineWithoutQuantity([FromBody] UpdateMedicineWithoutQuantityDTO medicine)
+		public async Task<IEnumerable<MedicineDTO>> UpdateMedicineWithoutQuantity(UpdateMedicineWithoutQuantityDTO medicine)
 		{
 			string StoredProc = $"EXEC SpUpdateMedicineWithoutQuantity @id = '{medicine.Id}',@batchNo = '{medicine.BatchNo}',@expireDate = '{medicine.ExpireDate}',@unit = '{medicine.Unit}',@price  = {medicine.Price},@description  = '{medicine.Description}',@Category  = '{medicine.Category}',@Type  = '{medicine.Type}'";
 
@@ -77,7 +77,7 @@ namespace LemlemPharmacy.DAL
 			return medicineDTOs;
 		}
 
-		public async Task<IEnumerable<MedicineDTO>> UpdateMedicineQuantity([FromBody] UpdateMedicineQuantityDTO medicine)
+		public async Task<IEnumerable<MedicineDTO>> UpdateMedicineQuantity(UpdateMedicineQuantityDTO medicine)
 		{
 			string StoredProc = $"EXEC SpUpdateMedicineQuantity @BatchNo = '{medicine.BatchNo}',@Quantity  = '{medicine.Quantity}',@Invoice  = '{medicine.Invoice}'";
 
@@ -90,7 +90,7 @@ namespace LemlemPharmacy.DAL
 			return medicineDTOs;
 		}
 
-		public async Task<IEnumerable<MedicineDTO>> AddMedicineQuantity([FromBody] AddMedicineQuantityDTO medicine)
+		public async Task<IEnumerable<MedicineDTO>> AddMedicineQuantity(AddMedicineQuantityDTO medicine)
 		{
 			string StoredProc = $"EXEC SpAddMedicineQuantity @BatchNo = '{medicine.BatchNo}',@Quantity  = {medicine.Quantity},@Invoice  = '{medicine.Invoice}',@DateReceived  = '{medicine.DateReceived}'";
 
@@ -103,7 +103,7 @@ namespace LemlemPharmacy.DAL
 			return medicineDTOs;
 		}
 
-		public async Task<IEnumerable<MedicineDTO>> RemoveMedicine([FromBody] RemoveMedicineDTO medicine)
+		public async Task<IEnumerable<MedicineDTO>> RemoveMedicine(RemoveMedicineDTO medicine)
 		{
 			string StoredProc = $"EXEC SpRemoveMedicine @Id = '{medicine.Id}',@Quantity = {medicine.Quantity},@DateReceived  = '{medicine.DateReceived}',@Invoice  = '{medicine.Invoice}'";
 
@@ -116,7 +116,7 @@ namespace LemlemPharmacy.DAL
 			return medicineDTOs;
 		}
 
-		public async Task<IEnumerable<MedicineDTO>> AddMedicine([FromBody] AddMedicineDTO medicine)
+		public async Task<IEnumerable<MedicineDTO>> AddMedicine(AddMedicineDTO medicine)
 		{
 			string StoredProc = $"EXEC SpAddMedicine @BatchNo = '{medicine.BatchNo}',@ExpireDate = '{medicine.ExpireDate}',@Unit = '{medicine.Unit}',@Quantity = {medicine.Quantity},@Price  = {medicine.Price},@Description  = '{medicine.Description}',@Category  = '{medicine.Category}',@Type  = '{medicine.Type}',@Invoice  = '{medicine.Invoice}',@DateReceived  = '{medicine.DateReceived}'";
 			if (IsExpired(medicine.ExpireDate))

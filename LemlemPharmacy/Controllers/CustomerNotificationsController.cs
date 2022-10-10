@@ -13,12 +13,12 @@ namespace LemlemPharmacy.Controllers
     [ApiController]
     public class CustomerNotificationsController : ControllerBase
     {
-        private readonly LemlemPharmacyContext _context;
+		private readonly ICustomerNotificationRepository _customerNotificationRepository;
 		private readonly IMedicineRepository _medicineRepository;
 
-		public CustomerNotificationsController(LemlemPharmacyContext context, IMedicineRepository medicineRepository)
+		public CustomerNotificationsController(ICustomerNotificationRepository customerNotificationRepository, IMedicineRepository medicineRepository)
         {
-            _context = context;
+            _customerNotificationRepository = customerNotificationRepository;
             _medicineRepository = medicineRepository;
         }
 
@@ -26,87 +26,91 @@ namespace LemlemPharmacy.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> GetCustomerNotification()
         {
-            var result = await _context.CustomerNotification.ToListAsync();
-            List<CustomerNotificationDTO> customerNotificationDTOs = new List<CustomerNotificationDTO>();
-            foreach (var item in result)
-                customerNotificationDTOs.Add(new CustomerNotificationDTO(item));
-
-            return Ok(customerNotificationDTOs);
+            try
+            {
+                return Ok(await _customerNotificationRepository.GetCustomerNotification());
+            }
+            catch(Exception e)
+            {
+                return BadRequest(new Response()
+                {
+                    Status = "Error",
+                    Message = e.Message
+                });
+            }
         }
 
         // GET: api/CustomerNotifications/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerNotificationDTO>> GetCustomerNotification(Guid id)
         {
-            var customerNotification = await _context.CustomerNotification.FindAsync(id);
-
-            if (customerNotification == null)
+            try
             {
-                return NotFound();
+                return Ok(await _customerNotificationRepository.GetCustomerNotification(id));
             }
-
-            return new CustomerNotificationDTO(customerNotification);
+            catch(Exception e)
+            {
+                return BadRequest(new Response()
+                {
+                    Status = "Error",
+                    Message = e.Message
+                });
+            }
         }
 
 		// GET: api/CustomerNotifications/5
 		[HttpGet("batchNo/{batchNo}")]
 		public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> GetCustomerNotificationByBatchNo(string batchNo)
 		{
-			var result = await _context.CustomerNotification.FromSqlRaw($"SpSelectCustomerNotificationByBatchNo '{batchNo}'").ToListAsync();
-
-			if (result == null) return NotFound();
-
-			var customerNotificationDTOs = new List<CustomerNotificationDTO>();
-			foreach (var item in result)
-				customerNotificationDTOs.Add(new CustomerNotificationDTO(item));
-
-			return customerNotificationDTOs;
+            try
+            {
+                return Ok(await _customerNotificationRepository.GetCustomerNotificationByBatchNo(batchNo));
+            }
+            catch(Exception e)
+            {
+				return BadRequest(new Response()
+				{
+					Status = "Error",
+					Message = e.Message
+				});
+			}
 		}
 
 		// GET: api/CustomerNotifications/5
 		[HttpGet("phoneNo/{phoneNo}")]
 		public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> GetCustomerNotificationByPhoneNo(string phoneNo)
 		{
-			var result = await _context.CustomerNotification.FromSqlRaw($"SpSelectCustomerNotificationByPhone '{phoneNo}'").ToListAsync();
-
-			if (result == null) return NotFound();
-
-			var customerNotificationDTOs = new List<CustomerNotificationDTO>();
-			foreach (var item in result)
-				customerNotificationDTOs.Add(new CustomerNotificationDTO(item));
-
-			return customerNotificationDTOs;
+			try
+			{
+				return Ok(await _customerNotificationRepository.GetCustomerNotificationByPhoneNo(phoneNo));
+			}
+			catch (Exception e)
+			{
+				return BadRequest(new Response()
+				{
+					Status = "Error",
+					Message = e.Message
+				});
+			}
 		}
 
 		// PUT: api/CustomerNotifications/5
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 		[HttpPut("id/{id}")]
-        public async Task<IActionResult> PutCustomerNotification(Guid id, CustomerNotificationDTO customerNotification)
+        public async Task<ActionResult> PutCustomerNotification(Guid id, CustomerNotificationDTO customerNotification)
         {
-            if (id != customerNotification.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(customerNotification).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
+                return Ok(await _customerNotificationRepository.EditCustomerNotification(id, customerNotification));
             }
-            catch (DbUpdateConcurrencyException)
+            catch(Exception e)
             {
-                if (!CustomerNotificationExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+				return BadRequest(new Response()
+				{
+					Status = "Error",
+					Message = e.Message
+				});
+			}
         }
 
         [HttpGet("sendtoall")]
@@ -194,7 +198,7 @@ namespace LemlemPharmacy.Controllers
 
         // DELETE: api/CustomerNotifications/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomerNotification(Guid id)
+        public async Task<ActionResult> DeleteCustomerNotification(Guid id)
         {
             var customerNotification = await _context.CustomerNotification.FindAsync(id);
             if (customerNotification == null)

@@ -9,8 +9,8 @@ namespace LemlemPharmacy.DAL
 		public Task<IEnumerable<CustomerDTO>> GetAllCustomers();
 		public Task<IEnumerable<CustomerDTO>> GetCustomerByPhone(string phoneNo);
 		public Task<IEnumerable<CustomerDTO>> GetCustomerByName(string name);
-		public Task<IEnumerable<CustomerDTO>> UpdateCustomer([FromBody] CustomerDTO customer);
-		public Task<IEnumerable<CustomerDTO>> AddCustomer([FromBody] AddCustomerDTO customer);
+		public Task<IEnumerable<CustomerDTO>> UpdateCustomer(CustomerDTO customer);
+		public Task<IEnumerable<CustomerDTO>> AddCustomer(AddCustomerDTO customer);
 		public Task<bool> DeleteCustomer(Guid id);
 	}
 }

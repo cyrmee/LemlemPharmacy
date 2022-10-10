@@ -91,7 +91,7 @@ namespace LemlemPharmacy.Controllers
 		[HttpPost]
         [AllowAnonymous]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LogInDTO model)
+        public async Task<ActionResult> Login([FromBody] LogInDTO model)
         {
             var user = await userManager.FindByNameAsync(model.UserName);
             if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
@@ -132,7 +132,7 @@ namespace LemlemPharmacy.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("changepassword")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
+        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
         {
             var user = await userManager.FindByNameAsync(model.UserName);
             if (user != null && await userManager.CheckPasswordAsync(user, model.OldPassword))
@@ -148,7 +148,7 @@ namespace LemlemPharmacy.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDTO registerUser)
+        public async Task<ActionResult> Register([FromBody] RegisterUserDTO registerUser)
         {
             var userExists = await userManager.FindByNameAsync(registerUser.UserName);
             if (userExists != null)
@@ -197,7 +197,7 @@ namespace LemlemPharmacy.Controllers
         }
 
         //[HttpPut("")]
-        //public async Task<IActionResult> EditUser([FromBody] RegisterUserDTO editedUser)
+        //public async Task<ActionResult> EditUser([FromBody] RegisterUserDTO editedUser)
         //{
 
         //}

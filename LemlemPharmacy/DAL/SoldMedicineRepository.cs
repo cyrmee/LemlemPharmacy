@@ -18,7 +18,7 @@ namespace LemlemPharmacy.DAL
 			_context = context;
 		}
 
-		public async Task<IEnumerable<SoldMedicineDTO>> SellMedicine([FromBody] SellMedicineDTO soldMedicine)
+		public async Task<IEnumerable<SoldMedicineDTO>> SellMedicine(SellMedicineDTO soldMedicine)
 		{
 			if (Regex.IsMatch(soldMedicine.CustomerPhone, pattern))
 			{

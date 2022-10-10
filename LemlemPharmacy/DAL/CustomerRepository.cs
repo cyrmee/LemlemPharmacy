@@ -64,7 +64,7 @@ namespace LemlemPharmacy.DAL
 			return customers;
 		}
 
-		public async Task<IEnumerable<CustomerDTO>> UpdateCustomer([FromBody] CustomerDTO customer)
+		public async Task<IEnumerable<CustomerDTO>> UpdateCustomer(CustomerDTO customer)
 		{
 			string storedProc = $"EXEC SpUpdateCustomer @Id = '{customer.Id}',@Name = '{customer.Name}',@PhoneNo  = '{customer.PhoneNo}'";
 
@@ -81,7 +81,7 @@ namespace LemlemPharmacy.DAL
 				throw new Exception("Phone number not in the right format. Example: +251 91 234 5678 +251912345678");
 		}
 
-		public async Task<IEnumerable<CustomerDTO>> AddCustomer([FromBody] AddCustomerDTO customer)
+		public async Task<IEnumerable<CustomerDTO>> AddCustomer(AddCustomerDTO customer)
 		{
 			string storedProc = $"EXEC SpAddCustomer @Name = '{customer.Name}',@PhoneNo  = '{customer.PhoneNo}'";
 
