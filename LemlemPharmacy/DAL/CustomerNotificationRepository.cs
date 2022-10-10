@@ -19,7 +19,7 @@ namespace LemlemPharmacy.DAL
 			_context = context;
 		}
 
-		public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> GetCustomerNotification()
+		public async Task<IEnumerable<CustomerNotificationDTO>> GetCustomerNotification()
 		{
 			var result = await _context.CustomerNotification.ToListAsync();
 			var customerNotificationDTOs = new List<CustomerNotificationDTO>();
@@ -29,14 +29,14 @@ namespace LemlemPharmacy.DAL
 			return customerNotificationDTOs;
 		}
 
-		public async Task<ActionResult<CustomerNotificationDTO>> GetCustomerNotification(Guid id)
+		public async Task<CustomerNotificationDTO> GetCustomerNotification(Guid id)
 		{
 			var customerNotification = await _context.CustomerNotification.FindAsync(id);
 			if (customerNotification == null) throw new Exception("Record not found!");
 			return new CustomerNotificationDTO(customerNotification);
 		}
 
-		public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> GetCustomerNotificationByBatchNo(string batchNo)
+		public async Task<IEnumerable<CustomerNotificationDTO>> GetCustomerNotificationByBatchNo(string batchNo)
 		{
 			var result = await _context.CustomerNotification.FromSqlRaw($"SpSelectCustomerNotificationByBatchNo '{batchNo}'").ToListAsync();
 			if (result == null) throw new Exception("Record not found!");
@@ -46,7 +46,7 @@ namespace LemlemPharmacy.DAL
 			return customerNotificationDTOs;
 		}
 
-		public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> GetCustomerNotificationByPhoneNo(string phoneNo)
+		public async Task<IEnumerable<CustomerNotificationDTO>> GetCustomerNotificationByPhoneNo(string phoneNo)
 		{
 			var result = await _context.CustomerNotification.FromSqlRaw($"SpSelectCustomerNotificationByPhone '{phoneNo}'").ToListAsync();
 			if (result == null) throw new Exception("Record not found!");
@@ -87,6 +87,15 @@ namespace LemlemPharmacy.DAL
 			}
 			else
 				throw new Exception("Phone number not in the right format. Example: +251 91 234 5678 +251912345678");
+		}
+
+		public async Task<ActionResult> DeleteCustomerNotification(Guid id)
+		{
+			var customerNotification = await _context.CustomerNotification.FindAsync(id);
+			if (customerNotification == null) throw new Exception("Record not found!");
+			_context.CustomerNotification.Remove(customerNotification);
+			await _context.SaveChangesAsync();
+			return new NoContentResult();
 		}
 
 		private bool disposed = false;

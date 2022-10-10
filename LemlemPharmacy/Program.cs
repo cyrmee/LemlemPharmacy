@@ -20,6 +20,8 @@ builder.Services.AddScoped<IMedicineRepository, MedicineRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ISoldMedicineRepository, SoldMedicineRepository>();
 builder.Services.AddScoped<IBinCardRepository, BinCardRepository>();
+builder.Services.AddScoped<ICustomerNotificationRepository, CustomerNotificationRepository>();
+builder.Services.AddScoped<IDssRepository, DssRepository>();
 
 builder.Services.AddCors(options =>
 {

@@ -23,8 +23,5 @@ namespace LemlemPharmacy.Interfaces
 
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
-
-        [DataType(DataType.Date)]
-        public DateTime NextDate { get; set; }
     }
 }

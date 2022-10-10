@@ -99,13 +99,13 @@ namespace LemlemPharmacy.DAL
 
 		}
 
-		public async Task<bool> DeleteCustomer(Guid id)
+		public async Task<ActionResult> DeleteCustomer(Guid id)
 		{
 			var customer = await _context.Customer.FindAsync(id);
 			if (customer == null) throw new Exception("Customer not found.");
 			_context.Customer.Remove(customer);
 			_context.SaveChanges();
-			return true;
+			return new NoContentResult();
 		}
 
 		private bool disposed = false;

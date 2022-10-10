@@ -119,8 +119,7 @@ namespace LemlemPharmacy.Controllers
 		{
 			try
 			{
-				var customer = await _customerRepository.DeleteCustomer(id);
-				return NoContent();
+				return await _customerRepository.DeleteCustomer(id);
 			}
 			catch (Exception e)
 			{

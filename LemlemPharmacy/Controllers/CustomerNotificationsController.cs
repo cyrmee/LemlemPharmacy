@@ -113,30 +113,30 @@ namespace LemlemPharmacy.Controllers
 			}
         }
 
-        [HttpGet("sendtoall")]
-        public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> SendSMSToCustomers()
-        {
-            var result = _context.CustomerNotification.ToList();
-            if (result == null) return Ok(new Response()
-            {
-                Status = "Ok",
-                Message = "No pending notification to be sent."
-            });
+   //     [HttpGet("sendtoall")]
+   //     public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> SendSMSToCustomers()
+   //     {
+   //         var result = _context.CustomerNotification.ToList();
+   //         if (result == null) return Ok(new Response()
+   //         {
+   //             Status = "Ok",
+   //             Message = "No pending notification to be sent."
+   //         });
 
-            var meds = (List<MedicineDTO>)await _medicineRepository.GetAllMedicine();
+   //         var meds = (List<MedicineDTO>)await _medicineRepository.GetAllMedicine();
 
-			for (int i = 0; i < result.Count; i++)
-                SMSService.SendSMS(
-                        result[i].PhoneNo,
-                        $"Please get your {meds[0].Description}.\n" + $"Sincerley,\n" + $"Lemlem Pharmacy" + $"");
+			//for (int i = 0; i < result.Count; i++)
+   //             SMSService.SendSMS(
+   //                     result[i].PhoneNo,
+   //                     $"Please get your {meds[0].Description}.\n" + $"Sincerley,\n" + $"Lemlem Pharmacy" + $"");
 
 
-            return Ok(new Response()
-            {
-                Status = "Success",
-                Message = "SMS notifications sent."
-            });
-        }
+   //         return Ok(new Response()
+   //         {
+   //             Status = "Success",
+   //             Message = "SMS notifications sent."
+   //         });
+   //     }
 
 		//[HttpPut("sendToCustomer")]
 		//public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> SendSMSToCustomers([FromBody] CustomerNotificationDTO customerNotificationDTO)
@@ -178,13 +178,11 @@ namespace LemlemPharmacy.Controllers
 		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
 
 		[HttpPost]
-        public async Task<ActionResult<CustomerNotificationDTO>> PostCustomerNotification(CustomerNotification customerNotification)
+        public async Task<ActionResult<CustomerNotificationDTO>> PostCustomerNotification(CustomerNotificationDTO customerNotification)
         {
             try
             {
-				_context.CustomerNotification.Add(customerNotification);
-				await _context.SaveChangesAsync();
-				return CreatedAtAction("GetCustomerNotification", new { id = customerNotification.Id }, customerNotification);
+                return Ok(await _customerNotificationRepository.AddCustomerNotification(customerNotification));
 			}
             catch(Exception e)
             {
@@ -200,21 +198,18 @@ namespace LemlemPharmacy.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteCustomerNotification(Guid id)
         {
-            var customerNotification = await _context.CustomerNotification.FindAsync(id);
-            if (customerNotification == null)
-            {
-                return NotFound();
-            }
-
-            _context.CustomerNotification.Remove(customerNotification);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-		private bool CustomerNotificationExists(Guid id)
-        {
-            return _context.CustomerNotification.Any(e => e.Id == id);
-        }
+			try
+			{
+				return await _customerNotificationRepository.DeleteCustomerNotification(id);
+			}
+			catch (Exception e)
+			{
+				return BadRequest(new Response()
+				{
+					Status = "Error",
+					Message = e.Message
+				});
+			}
+		}
     }
 }

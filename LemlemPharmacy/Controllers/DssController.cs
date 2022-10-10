@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using LemlemPharmacy.DAL;
+using LemlemPharmacy.DTOs;
+using LemlemPharmacy.Models;
+using Microsoft.AspNetCore.Mvc;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -8,11 +11,30 @@ namespace LemlemPharmacy.Controllers
     [ApiController]
     public class DssController : ControllerBase
     {
+        private readonly IDssRepository _dssRepository;
+
+        public DssController(IDssRepository dssRepository)
+        {
+            _dssRepository = dssRepository;
+        }
+
+
         // GET: api/<DssController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<ActionResult<IEnumerable<FullRucDTO>>> Get()
         {
-            return new string[] { "value1", "value2" };
+            try
+            {
+                return Ok(await _dssRepository.GetFullRUCReport());
+            }
+            catch (Exception e)
+            {
+                return BadRequest(new Response()
+                {
+                    Status = "Error",
+                    Message = e.Message
+                });
+            }
         }
 
         // GET api/<DssController>/5
