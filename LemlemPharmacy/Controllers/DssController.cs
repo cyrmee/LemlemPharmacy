@@ -20,8 +20,8 @@ namespace LemlemPharmacy.Controllers
 
 
         // GET: api/<DssController>
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<FullRucDTO>>> Get()
+        [HttpGet("FullRUCRecords")]
+        public async Task<ActionResult<IEnumerable<FullRucDTO>>> GetFullRucReport()
         {
             try
             {
@@ -37,29 +37,21 @@ namespace LemlemPharmacy.Controllers
             }
         }
 
-        // GET api/<DssController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<DssController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<DssController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<DssController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
-    }
+		[HttpGet("graphByCategory")]
+		public async Task<ActionResult<IEnumerable<GraphByCategoryDTO>>> GetGraphbyCategory()
+		{
+			try
+			{
+				return Ok(await _dssRepository.GetGraphByCategory());
+			}
+			catch (Exception e)
+			{
+				return BadRequest(new Response()
+				{
+					Status = "Error",
+					Message = e.Message
+				});
+			}
+		}
+	}
 }

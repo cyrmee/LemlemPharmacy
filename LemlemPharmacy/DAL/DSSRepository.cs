@@ -39,6 +39,33 @@ namespace LemlemPharmacy.DAL
 			return result;
 		}
 
+		public async Task<IEnumerable<dynamic>> GetGraphByCategory()
+		{
+			/*
+			 SELECT Medicine.Category, SUM(BinCard.AmountRecived) * -1 AS [Amount]
+                FROM BinCard
+                JOIN Medicine ON Medicine.BatchNo = BinCard.BatchNo
+                WHERE BinCard.Damaged = 1
+                GROUP BY Medicine.Category
+			 */
+			var result = await (from binCard in _context.Set<BinCard>()
+								join medicine in _context.Set<Medicine>()
+									on binCard.BatchNo equals medicine.BatchNo
+								where binCard.Damaged == 1
+								group new { medicine.Category, binCard.AmountRecived } by new { medicine.Category } into m
+								select new
+								{
+									Category = m.Key.Category,
+									Amount = m.Sum(m => m.AmountRecived) * -1
+								}
+								).ToListAsync();
+
+			//var res = await _context.BinCard.FromSqlRaw($"EXEC SpDamagedOrExpiredMedicinesByCategory").ToListAsync();
+
+			if (result == null) throw new Exception("Record not found!");
+			return result;
+		}
+
 		private bool disposed = false;
 		protected virtual void Dispose(bool disposing)
 		{
