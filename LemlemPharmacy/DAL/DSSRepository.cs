@@ -60,8 +60,6 @@ namespace LemlemPharmacy.DAL
 								}
 								).ToListAsync();
 
-			//var res = await _context.BinCard.FromSqlRaw($"EXEC SpDamagedOrExpiredMedicinesByCategory").ToListAsync();
-
 			if (result == null) throw new Exception("Record not found!");
 			return result;
 		}

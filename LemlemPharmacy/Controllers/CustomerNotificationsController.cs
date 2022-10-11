@@ -14,12 +14,10 @@ namespace LemlemPharmacy.Controllers
     public class CustomerNotificationsController : ControllerBase
     {
 		private readonly ICustomerNotificationRepository _customerNotificationRepository;
-		private readonly IMedicineRepository _medicineRepository;
 
 		public CustomerNotificationsController(ICustomerNotificationRepository customerNotificationRepository, IMedicineRepository medicineRepository)
         {
             _customerNotificationRepository = customerNotificationRepository;
-            _medicineRepository = medicineRepository;
         }
 
         // GET: api/CustomerNotifications
@@ -113,71 +111,41 @@ namespace LemlemPharmacy.Controllers
 			}
         }
 
-   //     [HttpGet("sendtoall")]
-   //     public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> SendSMSToCustomers()
-   //     {
-   //         var result = _context.CustomerNotification.ToList();
-   //         if (result == null) return Ok(new Response()
-   //         {
-   //             Status = "Ok",
-   //             Message = "No pending notification to be sent."
-   //         });
+        [HttpGet("sendtoall")]
+        public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> SendSMSToCustomers()
+        {
+            try
+            {
+                return Ok(await _customerNotificationRepository.SendSMSToCustomers());
+            }
+            catch(Exception e)
+            {
+                return BadRequest(new Response()
+                {
+                    Status = "Error",
+                    Message = e.Message
+                });
+            }
+		}
 
-   //         var meds = (List<MedicineDTO>)await _medicineRepository.GetAllMedicine();
+        //[HttpPut("sendToCustomer")]
+        //public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> SendSMSToCustomer(string phoneNo)
+        //{
+        //    try
+        //    {
 
-			//for (int i = 0; i < result.Count; i++)
-   //             SMSService.SendSMS(
-   //                     result[i].PhoneNo,
-   //                     $"Please get your {meds[0].Description}.\n" + $"Sincerley,\n" + $"Lemlem Pharmacy" + $"");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest(new Response()
+        //        {
+        //            Status = "Error",
+        //            Message = e.Message
+        //        });
+        //    }
+        //}
 
-
-   //         return Ok(new Response()
-   //         {
-   //             Status = "Success",
-   //             Message = "SMS notifications sent."
-   //         });
-   //     }
-
-		//[HttpPut("sendToCustomer")]
-		//public async Task<ActionResult<IEnumerable<CustomerNotificationDTO>>> SendSMSToCustomers([FromBody] CustomerNotificationDTO customerNotificationDTO)
-		//{
-		//	var result = await _context.CustomerNotification.ToListAsync();
-		//	if (result == null) return Ok(new Response()
-		//	{
-		//		Status = "Ok",
-		//		Message = "No pending notification to be sent."
-		//	});
-
-		//	TwilioClient.Init(accountSid, authToken);
-		//	var today = DateTime.Now;
-		//	MessageResource message;
-  //          MedicineDTO medicine;
-		//	for (int i = 0; i < result.Count; i++)
-		//	{
-  //              medicine = await GetMedicineAsync(result[i].BatchNo);
-
-		//		if (result[i].EndDate < today)
-		//			result.RemoveAt(i);
-		//		else if (result[i].EndDate == today)
-		//			message = await MessageResource.CreateAsync(
-		//			to: new PhoneNumber($"{result[i].PhoneNo}"),
-		//			from: new PhoneNumber("+17087669848"),
-		//			body: $"Please get your {medicine.Description} soon!");
-		//	}
-		//	return Ok(new Response()
-		//	{
-		//		Status = "Success",
-		//		Message = "SMS notifications sent."
-		//	});
-		//}
-
-
-
-
-		// POST: api/CustomerNotifications
-		// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-
-		[HttpPost]
+        [HttpPost]
         public async Task<ActionResult<CustomerNotificationDTO>> PostCustomerNotification(CustomerNotificationDTO customerNotification)
         {
             try

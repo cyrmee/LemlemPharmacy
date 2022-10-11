@@ -12,5 +12,6 @@ namespace LemlemPharmacy.DAL
 		public Task<IEnumerable<CustomerNotificationDTO>> EditCustomerNotification(Guid id, CustomerNotificationDTO customerNotification);
 		public Task<IEnumerable<CustomerNotificationDTO>> AddCustomerNotification(CustomerNotificationDTO customerNotification);
 		public Task<ActionResult> DeleteCustomerNotification(Guid id);
+		public Task<IEnumerable<dynamic>> SendSMSToCustomers();
 	}
 }

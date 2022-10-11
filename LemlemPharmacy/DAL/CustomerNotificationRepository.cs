@@ -1,10 +1,9 @@
 ﻿using LemlemPharmacy.Data;
 using LemlemPharmacy.DTOs;
 using LemlemPharmacy.Models;
+using LemlemPharmacy.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Server.IIS.Core;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileSystemGlobbing.Internal;
 using System.Text.RegularExpressions;
 
 namespace LemlemPharmacy.DAL
@@ -97,6 +96,52 @@ namespace LemlemPharmacy.DAL
 			await _context.SaveChangesAsync();
 			return new NoContentResult();
 		}
+
+		public async Task<IEnumerable<dynamic>> SendSMSToCustomers()
+		{
+			var result = await (from customerNotification in _context.Set<CustomerNotification>()
+								join medicine in _context.Set<Medicine>()
+									on customerNotification.BatchNo equals medicine.BatchNo
+								join customer in _context.Set<Customer>()
+									on customerNotification.PhoneNo equals customer.PhoneNo
+								where DateTime.Now.AddMonths(2).AddDays(-2) <= customerNotification.NextDate && customerNotification.NextDate <= DateTime.Now.AddMonths(2).AddDays(2)
+								select new
+								{
+									customerNotification.Id,
+									customer.Name,
+									customerNotification.PhoneNo,
+									customerNotification.BatchNo,
+									customerNotification.Interval,
+									customerNotification.EndDate,
+									customerNotification.NextDate,
+									medicine.Description,
+									medicine.Category
+								}
+						  ).ToListAsync();
+
+			if (result == null) throw new Exception("No pending notification.");
+			foreach (var item in result)
+			{
+				SMSService.SendSMS(
+						item.PhoneNo,
+						$"Dear {item.Name},\nPlease get your {item.Description} in the next 2 days.\nSincerley,\nLemlem Pharmacy");
+				await EditCustomerNotification(
+					item.Id, 
+					new CustomerNotificationDTO(
+						item.Id, 
+						item.PhoneNo, 
+						item.BatchNo, 
+						item.Interval, 
+						item.EndDate, 
+						new DateTime(
+							year: item.NextDate.Year, 
+							month: item.NextDate.Month + item.Interval, 
+							day: item.NextDate.Day)));
+			}
+			return result;
+		}
+
+
 
 		private bool disposed = false;
 		protected virtual void Dispose(bool disposing)
