@@ -61,9 +61,16 @@ namespace LemlemPharmacy.Data
             // Medicine-BinCard Relationship (One-to-Many)
             builder.Entity<BinCard>()
                 .HasOne(s => s.Medicine)
-                .WithMany(c => c.BinCards)
-                .HasForeignKey(s => s.BatchNo)
+                .WithMany(c => c.BinCardsBatchNos)
+				.HasForeignKey(s => s.BatchNo)
                 .HasPrincipalKey(c => c.BatchNo);
+
+            // Medicine-BinCard Relationship (One-to-Many)
+            builder.Entity<BinCard>()
+                .HasOne(s => s.MedicineID)
+                .WithMany(c => c.BinCardsMedicineIDs)
+                .HasForeignKey(s => s.MedicineId)
+                .HasPrincipalKey(c => c.Id);
 
             // Customer-SoldMedicine Relationship (One-to-Many)
             builder.Entity<SoldMedicine>()

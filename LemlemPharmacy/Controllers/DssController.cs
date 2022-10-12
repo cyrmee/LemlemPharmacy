@@ -50,5 +50,22 @@ namespace LemlemPharmacy.Controllers
 				});
 			}
 		}
+
+		[HttpGet("profitloss")]
+		public async Task<ActionResult<IEnumerable<dynamic>>> GetProfitLossReport()
+		{
+			try
+			{
+				return Ok(await _dssRepository.GetProfitLossReport());
+			}
+			catch (Exception e)
+			{
+				return BadRequest(new Response()
+				{
+					Status = "Error",
+					Message = e.Message
+				});
+			}
+		}
 	}
 }

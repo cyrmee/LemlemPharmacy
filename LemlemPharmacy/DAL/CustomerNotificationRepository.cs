@@ -104,7 +104,7 @@ namespace LemlemPharmacy.DAL
 									on customerNotification.BatchNo equals medicine.BatchNo
 								join customer in _context.Set<Customer>()
 									on customerNotification.PhoneNo equals customer.PhoneNo
-								where DateTime.Now.AddMonths(2).AddDays(-2) <= customerNotification.NextDate && customerNotification.NextDate <= DateTime.Now.AddMonths(2).AddDays(2)
+								where DateTime.Now.AddMonths(2).AddDays(-3) <= customerNotification.NextDate && customerNotification.NextDate <= DateTime.Now.AddMonths(2).AddDays(3)
 								select new
 								{
 									customerNotification.Id,
@@ -124,19 +124,16 @@ namespace LemlemPharmacy.DAL
 			{
 				SMSService.SendSMS(
 						item.PhoneNo,
-						$"Dear {item.Name},\nPlease get your {item.Description} in the next 2 days.\nSincerley,\nLemlem Pharmacy");
+						$"Dear {item.Name},\nPlease get your {item.Description} this week.\nSincerley,\nLemlem Pharmacy");
 				await EditCustomerNotification(
-					item.Id, 
+					item.Id,
 					new CustomerNotificationDTO(
-						item.Id, 
-						item.PhoneNo, 
-						item.BatchNo, 
-						item.Interval, 
-						item.EndDate, 
-						new DateTime(
-							year: item.NextDate.Year, 
-							month: item.NextDate.Month + item.Interval, 
-							day: item.NextDate.Day)));
+						item.Id,
+						item.PhoneNo,
+						item.BatchNo,
+						item.Interval,
+						item.EndDate,
+						item.NextDate.AddMonths(item.Interval)));
 			}
 			return result;
 		}

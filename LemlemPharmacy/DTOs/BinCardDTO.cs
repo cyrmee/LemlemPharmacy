@@ -14,6 +14,9 @@ namespace LemlemPharmacy.DTOs
 		public string BatchNo { get; set; } = string.Empty;
 
 		[Required]
+		public Guid MedicineId { get; set; }
+
+		[Required]
 		[DataType(DataType.Date)]
 		public DateTime DateReceived { get; set; }
 
@@ -28,16 +31,6 @@ namespace LemlemPharmacy.DTOs
 
 		}
 
-		public BinCardDTO(Guid id, string invoice, string batchNo, DateTime dateReceived, int amountRecived, int damaged)
-		{
-			Id = id;
-			Invoice = invoice;
-			BatchNo = batchNo;
-			DateReceived = dateReceived;
-			AmountRecived = amountRecived;
-			Damaged = damaged;
-		}
-
 		public BinCardDTO(BinCard binCard)
 		{
 			Id = binCard.Id;
@@ -46,6 +39,7 @@ namespace LemlemPharmacy.DTOs
 			DateReceived = binCard.DateReceived;
 			AmountRecived = binCard.AmountRecived;
 			Damaged = binCard.Damaged;
+			MedicineId = binCard.MedicineId;
 		}
 	}
 }

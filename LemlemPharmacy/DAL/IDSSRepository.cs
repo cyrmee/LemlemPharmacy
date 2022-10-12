@@ -7,5 +7,6 @@ namespace LemlemPharmacy.DAL
 	{
 		public Task<IEnumerable<dynamic>> GetFullRUCReport();
 		public Task<IEnumerable<dynamic>> GetGraphByCategory();
+		public Task<IEnumerable<dynamic>> GetProfitLossReport();
 	}
 }

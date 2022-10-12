@@ -1,8 +1,6 @@
 ﻿using LemlemPharmacy.Data;
-using LemlemPharmacy.DTOs;
 using LemlemPharmacy.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace LemlemPharmacy.DAL
 {
@@ -41,13 +39,6 @@ namespace LemlemPharmacy.DAL
 
 		public async Task<IEnumerable<dynamic>> GetGraphByCategory()
 		{
-			/*
-			 SELECT Medicine.Category, SUM(BinCard.AmountRecived) * -1 AS [Amount]
-                FROM BinCard
-                JOIN Medicine ON Medicine.BatchNo = BinCard.BatchNo
-                WHERE BinCard.Damaged = 1
-                GROUP BY Medicine.Category
-			 */
 			var result = await (from binCard in _context.Set<BinCard>()
 								join medicine in _context.Set<Medicine>()
 									on binCard.BatchNo equals medicine.BatchNo
@@ -55,8 +46,41 @@ namespace LemlemPharmacy.DAL
 								group new { medicine.Category, binCard.AmountRecived } by new { medicine.Category } into m
 								select new
 								{
-									Category = m.Key.Category,
+									m.Key.Category,
 									Amount = m.Sum(m => m.AmountRecived) * -1
+								}
+								).ToListAsync();
+
+			if (result == null) throw new Exception("Record not found!");
+			return result;
+		}
+
+		public async Task<IEnumerable<dynamic>> GetProfitLossReport()
+		{
+			var result = await (from soldMedicine in _context.Set<SoldMedicine>()
+								join medicine in _context.Set<Medicine>()
+									on soldMedicine.MedicineId equals medicine.Id
+								join binCard in _context.Set<BinCard>()
+									on soldMedicine.MedicineId equals binCard.MedicineId
+								where binCard.Damaged == 1
+								group new {
+									soldMedicine.MedicineId,
+									MedicineName = medicine.Description,
+									InStock = medicine.Quantity,
+									medicine.Price,
+									SoldQuantity =  soldMedicine.Quantity,
+									soldMedicine.SellingPrice,
+									binCard.AmountRecived
+								} by new { medicine.BatchNo, medicine.Description } into m
+								select new
+								{
+									m.Key.BatchNo,
+									m.Key.Description,
+									SoldQuantity  = m.Sum(m => m.SoldQuantity),
+									SellingPrice = m.Sum(m => m.Price * 1.25),
+									MedicineCost = m.Sum(m => m.Price),
+									Damaged = m.Sum(m => m.AmountRecived * -1),
+									Profit = m.Sum(m => m.SellingPrice) - m.Sum(m => m.Price * m.SoldQuantity) + (m.Sum(m => m.AmountRecived) * m.Sum(m => m.Price))
 								}
 								).ToListAsync();
 

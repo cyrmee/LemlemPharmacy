@@ -40,7 +40,8 @@ namespace LemlemPharmacy.Models
         public string? Type { get; set; } = string.Empty;
 
         public ICollection<SoldMedicine>? SoldMedicines { get; set; }
-        public ICollection<BinCard>? BinCards { get; set; }
+        public ICollection<BinCard>? BinCardsBatchNos { get; set; }
+		public ICollection<BinCard>? BinCardsMedicineIDs { get; set; }
 		public ICollection<CustomerNotification>? CustomerNotifications { get; set; }
 	}
 }

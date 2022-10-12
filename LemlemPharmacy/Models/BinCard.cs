@@ -12,7 +12,10 @@ namespace LemlemPharmacy.Models
         [Required]
         public string Invoice { get; set; } = string.Empty;
 
-        [Required]
+		[Required]
+		public Guid MedicineId { get; set; }
+
+		[Required]
         public string BatchNo { get; set; } = string.Empty;
 
         [Required]
@@ -26,6 +29,7 @@ namespace LemlemPharmacy.Models
         public int Damaged { get; set; }
 
 
-        public Medicine? Medicine { get; set; }
-    }
+		public Medicine? Medicine { get; set; }
+		public Medicine? MedicineID { get; set; }
+	}
 }
