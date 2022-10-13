@@ -120,7 +120,7 @@ namespace LemlemPharmacy.Migrations
                     b.HasIndex("BatchNo", "Id")
                         .IsUnique();
 
-                    b.ToTable("BinCard");
+                    b.ToTable("BinCard", (string)null);
                 });
 
             modelBuilder.Entity("LemlemPharmacy.Models.Customer", b =>
@@ -142,7 +142,7 @@ namespace LemlemPharmacy.Migrations
                     b.HasIndex("PhoneNo")
                         .IsUnique();
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customer", (string)null);
                 });
 
             modelBuilder.Entity("LemlemPharmacy.Models.CustomerNotification", b =>
@@ -174,7 +174,7 @@ namespace LemlemPharmacy.Migrations
 
                     b.HasIndex("PhoneNo");
 
-                    b.ToTable("CustomerNotification");
+                    b.ToTable("CustomerNotification", (string)null);
                 });
 
             modelBuilder.Entity("LemlemPharmacy.Models.Medicine", b =>
@@ -222,7 +222,7 @@ namespace LemlemPharmacy.Migrations
                     b.HasIndex("BatchNo")
                         .IsUnique();
 
-                    b.ToTable("Medicine");
+                    b.ToTable("Medicine", (string)null);
 
                     b.HasCheckConstraint("CK_Medicine_Category", "Category in ('Anti-Fungal', 'Anti-Allergy', 'Anti-Helmentic', 'Hormonal Drugs', 'ENT Drugs', 'NSAI', 'GIT', 'Anti-Respiratory', 'Narcotic and Anti-Psychotropic', 'Anti-Biotic', 'Vitamins and Minerals', 'CSV Drugs')");
 
@@ -248,7 +248,7 @@ namespace LemlemPharmacy.Migrations
                     b.HasIndex("BatchNo", "Invoice")
                         .IsUnique();
 
-                    b.ToTable("MedicineTrack");
+                    b.ToTable("MedicineTrack", (string)null);
                 });
 
             modelBuilder.Entity("LemlemPharmacy.Models.SoldMedicine", b =>
@@ -285,7 +285,7 @@ namespace LemlemPharmacy.Migrations
 
                     b.HasIndex("PharmacistId");
 
-                    b.ToTable("SoldMedicine");
+                    b.ToTable("SoldMedicine", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

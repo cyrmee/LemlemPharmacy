@@ -14,7 +14,6 @@ namespace LemlemPharmacy.Models
         public string Name { get; set; } = string.Empty;
 
         [Required]
-        [RegexStringValidator(@"^\\+(?:[0-9]●?){6,14}[0-9]$")]
         public string PhoneNo { get; set; } = string.Empty;
 
 
