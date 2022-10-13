@@ -11,7 +11,7 @@ namespace LemlemPharmacy.Controllers
 {
 	[Route("api/[controller]")]
 	[EnableCors]
-	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
 	public class MedicinesController : ControllerBase
 	{

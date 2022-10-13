@@ -86,7 +86,7 @@ namespace LemlemPharmacy.Controllers
 		}
 
 		[HttpGet("profitloss")]
-		public async Task<ActionResult<IEnumerable<dynamic>>> GetProfitLossReport()
+		public async Task<ActionResult<IEnumerable<ProfitLossDTO>>> GetProfitLossReport()
 		{
 			try
 			{
@@ -103,7 +103,7 @@ namespace LemlemPharmacy.Controllers
 		}
 
 		[HttpGet("profitlossbydate")]
-		public async Task<ActionResult<IEnumerable<dynamic>>> GetProfitLossReportByDate([FromQuery] DateRangeDTO dateRange)
+		public async Task<ActionResult<IEnumerable<ProfitLossDTO>>> GetProfitLossReportByDate([FromQuery] DateRangeDTO dateRange)
 		{
 			try
 			{

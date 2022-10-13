@@ -1,18 +1,22 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Build.ObjectModelRemoting;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Permissions;
 
 namespace LemlemPharmacy.DTOs
 {
 	public class ProfitLossDTO
 	{
-		[Required]
-		public Guid MedicineId { get; set; }
-
+		/*{
+    "batchNo": "123",
+    "description": "Med Name",
+    "soldQuantity": 20,
+    "sellingPrice": 125,
+    "medicineCost": 100,
+    "damaged": 5,
+    "profit": 0
+  },*/
 		[Required]
 		public string BatchNo { get; set; } = string.Empty;
-
-		[Required]
-		public int InStock { get; set; }
 
 		[Required]
 		public string Description { get; set; } = string.Empty;
@@ -27,13 +31,7 @@ namespace LemlemPharmacy.DTOs
 		public double MedicineCost { get; set; }
 
 		[Required]
-		public string Invoice { get; set; } = string.Empty;
-
-		[Required]
-		public int Status { get; set; }
-
-		[Required]
-		public int AmountRecived { get; set; }
+		public int Damaged { get; set; }
 
 		[Required]
 		public float Profit { get; set; }
@@ -44,18 +42,15 @@ namespace LemlemPharmacy.DTOs
 
 		}
 
-		public ProfitLossDTO(Guid medicineId, string batchNo, int inStock, string description, int soldQuantity, double sellingPrice, double medicineCost, string invoice, int status, int amountRecived)
+		public ProfitLossDTO(string batchNo, string description, int soldQuantity, double sellingPrice, double medicineCost, int damaged, float profit)
 		{
-			MedicineId = medicineId;
 			BatchNo = batchNo;
-			InStock = inStock;
 			Description = description;
 			SoldQuantity = soldQuantity;
 			SellingPrice = sellingPrice;
 			MedicineCost = medicineCost;
-			Invoice = invoice;
-			Status = status;
-			AmountRecived = amountRecived;
+			Damaged = damaged;
+			Profit = profit;
 		}
 	}
 }
