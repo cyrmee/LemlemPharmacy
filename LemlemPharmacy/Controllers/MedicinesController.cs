@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using LemlemPharmacy.Data;
 using LemlemPharmacy.DTOs;
 using Microsoft.AspNetCore.Cors;
 using LemlemPharmacy.DAL;
@@ -11,7 +9,7 @@ namespace LemlemPharmacy.Controllers
 {
 	[Route("api/[controller]")]
 	[EnableCors]
-	[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+	//[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 	[ApiController]
 	public class MedicinesController : ControllerBase
 	{

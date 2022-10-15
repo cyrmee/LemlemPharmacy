@@ -150,56 +150,57 @@ namespace LemlemPharmacy.Controllers
         [Route("register")]
         public async Task<ActionResult> Register([FromBody] RegisterUserDTO registerUser)
         {
-            var userExists = await userManager.FindByNameAsync(registerUser.UserName);
-            if (userExists != null)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
-            ApplicationUser user;
-			if (Regex.IsMatch(registerUser.PhoneNo, pattern))
+            try
             {
-                user = new ApplicationUser()
-                {
-                    Email = registerUser.Email,
-                    SecurityStamp = Guid.NewGuid().ToString(),
-                    UserName = registerUser.UserName,
-                    PhoneNumber = registerUser.PhoneNo
-                };
-            }
-            else return BadRequest(new Response()
+				var userExists = await userManager.FindByNameAsync(registerUser.UserName);
+				if (userExists != null)
+					return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User already exists!" });
+				ApplicationUser user;
+				if (Regex.IsMatch(registerUser.PhoneNo, pattern))
+				{
+					user = new ApplicationUser()
+					{
+						Email = registerUser.Email,
+						SecurityStamp = Guid.NewGuid().ToString(),
+						UserName = registerUser.UserName,
+						PhoneNumber = registerUser.PhoneNo
+					};
+				}
+				else return BadRequest(new Response()
+				{
+					Status = "Error",
+					Message = "Phone number not in the right format. Example: +251 91 234 5678 +251912345678"
+				});
+
+				var result = await userManager.CreateAsync(user, registerUser.Password);
+
+				registerUser.Role = registerUser.Role.ToLower();
+				if (!await roleManager.RoleExistsAsync(UserRole.Pharmacist))
+					await roleManager.CreateAsync(new IdentityRole(UserRole.Pharmacist));
+
+				if (!await roleManager.RoleExistsAsync(UserRole.Manager))
+					await roleManager.CreateAsync(new IdentityRole(UserRole.Manager));
+
+				if (registerUser.Role == null)
+					return BadRequest(new Response()
+					{
+						Status = "Error",
+						Message = "Please choose a role!"
+					});
+				else if (registerUser.Role == UserRole.Pharmacist)
+					await userManager.AddToRoleAsync(user, UserRole.Pharmacist);
+				else if (registerUser.Role == UserRole.Manager)
+					await userManager.AddToRoleAsync(user, UserRole.Manager);
+
+				if (!result.Succeeded)
+					return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+
+				return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+			}
+            catch(Exception e)
             {
-                Status = "Error",
-                Message = "Phone number not in the right format. Example: +251 91 234 5678 +251912345678"
-            });
-            
-            var result = await userManager.CreateAsync(user, registerUser.Password);
-
-            registerUser.Role = registerUser.Role.ToLower();
-            if (!await roleManager.RoleExistsAsync(UserRole.Pharmacist))
-                await roleManager.CreateAsync(new IdentityRole(UserRole.Pharmacist));
-
-			if (!await roleManager.RoleExistsAsync(UserRole.Manager))
-				await roleManager.CreateAsync(new IdentityRole(UserRole.Manager));
-
-            if (registerUser.Role == null)
-                return BadRequest(new Response()
-                {
-                    Status = "Error",
-                    Message = "Please choose a role!"
-                });
-            else if(registerUser.Role == UserRole.Pharmacist)
-				await userManager.AddToRoleAsync(user, UserRole.Pharmacist);
-            else if(registerUser.Role == UserRole.Manager)
-				await userManager.AddToRoleAsync(user, UserRole.Manager);
-
-			if (!result.Succeeded)
-                return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
-
-            return Ok(new Response { Status = "Success", Message = "User created successfully!" });
+				return BadRequest(new Response { Status = "Error", Message = e.Message });
+			}
         }
-
-        //[HttpPut("")]
-        //public async Task<ActionResult> EditUser([FromBody] RegisterUserDTO editedUser)
-        //{
-
-        //}
     }
 }
